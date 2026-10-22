@@ -1,203 +1,98 @@
-# A/B Testing & Product Experimentation Analytics
+## 1. Overview & Provenance
 
-An end-to-end data science project evaluating an e-commerce landing-page experiment using Python, SQL, statistical hypothesis testing, confidence intervals, power analysis, and Bayesian methods.
+This project utilizes experimentation data from an e-commerce website landing page A/B test. The dataset was originally released by **Udacity** as part of the curriculum project *Analyze A/B Test Results* in the Data Analyst Nanodegree Program. It is widely mirrored on Kaggle and student repositories for experimentation pedagogy.
 
-The project focuses on a core product analytics question: **Did the redesigned landing page improve conversion rates, and is the evidence strong enough to support a rollout decision?**
+- **Primary Dataset (`ab_data.csv`)**:
+  - Upstream Source URL: `https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/ab_data.csv`
+  - Canonical Reference: Udacity Data Analyst Nanodegree (`Analyze_ab_test_results_notebook.ipynb`)
+  - Verified File Size: 15,901,933 bytes (\~15.16 MB)
+  - Verified SHA256: `d56e2accec25e99ac21cb3d76c5df516dd19cc7a77c14c9014f94e1ea1301beb`
+  - Total Raw Records: 294,478 observations across 290,584 unique visitor IDs
+- **Secondary Segment Dataset (`countries.csv`)**:
+  - Upstream Source URL: `https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/countries.csv`
+  - Verified File Size: 2,905,856 bytes (\~2.77 MB)
+  - Verified SHA256: `c011d0503d305c295327cd9dff9c37bb62a5f9ef4b356bcdaf7deca20d55e45b`
+  - Total Raw Records: 290,584 observations mapping `user_id` to `country` (`US`, `UK`, `CA`)
 
-## Key Findings
+### Licensing & Usage Rights Notice
 
-The benchmark analysis produced the following results:
-
-| Metric | Result |
-|---|---:|
-| Raw records | 294,478 |
-| Unique visitors in raw data | 290,584 |
-| Control conversion rate | 12.0386% |
-| Treatment conversion rate | 11.8808% |
-| Treatment minus control | −0.1578 percentage points |
-| Two-proportion Z-test p-value | 0.1899 |
-| 95% confidence interval for the difference | −0.3938 to +0.0781 percentage points |
-
-The observed conversion rate was slightly lower for the treatment group. The test did not provide statistically significant evidence of an improvement at the 5% significance level.
-
-**Important:** The dataset contains inconsistent group assignments and landing-page exposures. The findings must be interpreted alongside the documented data-quality issues and sensitivity analyses. The benchmark result alone does not establish that the redesign caused a decrease in conversions.
-
-## Technologies Used
-
-- **Python:** Data processing and statistical analysis
-- **Pandas and NumPy:** Data cleaning and numerical computation
-- **SciPy:** Statistical hypothesis testing
-- **SQLite and SQL:** Data storage, querying, and metric reconciliation
-- **Matplotlib:** Data visualization
-- **Jupyter Notebook:** Exploratory analysis and experiment evaluation
-- **Pytest:** Automated testing
-
-## Project Structure
-
-```text
-ab-testing-product-analytics/
-├── data/
-│   └── README.md
-├── notebooks/
-│   ├── 01_exploratory_data_analysis.ipynb
-│   └── 02_experiment_analysis.ipynb
-├── reports/
-│   ├── figures/
-│   └── final_experiment_report.md
-├── scripts/
-│   └── build_notebooks.py
-├── sql/
-│   ├── 01_schema.sql
-│   ├── 02_data_quality_audit.sql
-│   ├── 03_experiment_metrics.sql
-│   ├── 04_srm_check.sql
-│   ├── 05_temporal_metrics.sql
-│   └── 06_segment_metrics.sql
-├── src/
-│   ├── data_loader.py
-│   ├── data_cleaning.py
-│   ├── database.py
-│   ├── metrics.py
-│   ├── hypothesis_testing.py
-│   ├── power_analysis.py
-│   ├── bayesian_analysis.py
-│   ├── visualization.py
-│   └── run_pipeline.py
-├── tests/
-├── requirements.txt
-├── LICENSE
-└── README.md
-```
-
-## Analysis Workflow
-
-1. **Data ingestion and quality auditing:** Examine visitor records, repeated observations, inconsistent assignments, and landing-page mismatches.
-2. **Exploratory data analysis:** Investigate conversion rates, visitor distributions, daily trends, and geographic segments.
-3. **Frequentist inference:** Calculate conversion-rate differences, hypothesis tests, and confidence intervals.
-4. **Experiment diagnostics:** Evaluate sample-ratio mismatch and investigate data-quality concerns.
-5. **Power and MDE analysis:** Assess statistical power and the minimum detectable effect under stated assumptions.
-6. **Bayesian analysis:** Estimate posterior conversion rates, the probability that treatment performs better, and decision uncertainty.
-7. **Sensitivity analysis:** Compare results under alternative visitor-level data-handling specifications.
-8. **Reporting and testing:** Generate visualizations and reports, and validate calculations with automated tests.
-
-## Visualizations
-
-The repository includes figures for:
-
-- Conversion rates and confidence intervals
-- Daily and cumulative conversion trends
-- Geographic segment comparisons
-- Statistical power and minimum detectable effect
-- Bayesian posterior distributions
-- Sensitivity analysis across alternative data-handling specifications
-
-See [`reports/figures/`](reports/figures/) and the [final experiment report](reports/final_experiment_report.md).
-
-## Getting Started
-
-### 1. Requirements
-
-Install a supported Python version and Git.
-
-Clone the repository:
-
-```bash
-git clone https://github.com/manishkrmahato/ab-testing-product-analytics.git
-cd ab-testing-product-analytics
-```
-
-### 2. Create a virtual environment
-
-On Windows PowerShell:
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-```
-
-On macOS or Linux:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-```
-
-### 3. Install dependencies
-
-```bash
-python -m pip install -r requirements.txt
-```
-
-### 4. Obtain the dataset
-
-The raw CSV files are not included in this repository. Follow the instructions and review the provenance information in [`data/README.md`](data/README.md).
-
-The documented upstream files are:
-
-- [`ab_data.csv`](https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/ab_data.csv)
-- [`countries.csv`](https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/countries.csv)
-
-Download the files into `data/raw/` before running the pipeline. From the repository root, in PowerShell:
-
-```powershell
-New-Item -ItemType Directory -Force data/raw
-
-curl.exe -fL -o data/raw/ab_data.csv "https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/ab_data.csv"
-
-curl.exe -fL -o data/raw/countries.csv "https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/countries.csv"
-```
-
-Verify the files against the SHA-256 hashes documented in `data/README.md` before analyzing them.
-
-**Licensing note:** The formal license and redistribution rights for the third-party dataset have not been verified. Download availability does not establish permission to redistribute it.
-
-### 5. Run the analysis pipeline
-
-From the repository root:
-
-```bash
-python -m src.run_pipeline
-```
-
-### 6. Run the tests
-
-```bash
-python -m pytest -v
-```
-
-The pipeline and tests may depend on the raw data being downloaded first. See the data documentation and source code for the exact input requirements.
-
-## Reproducibility and Testing
-
-The project includes automated tests for data cleaning, metrics, hypothesis testing, power analysis, Bayesian calculations, and SQL/Python reconciliation.
-
-The reported validation run completed with 36 passing tests and a successful pipeline execution. Results can vary if the source data, dependencies, or analysis specifications change.
-
-## Limitations
-
-- The dataset contains visitors with conflicting group assignments and/or landing-page exposures.
-- A verified authoritative assignment log is unavailable, so the first-touch assignment analysis is a proxy rather than a confirmed intention-to-treat analysis.
-- Filtering ambiguous records may introduce selection bias.
-- Nonsignificant results do not establish that the true effect is zero.
-- Segment analyses are subject to uncertainty and should not be interpreted as proof that treatment effects are identical across countries.
-- Revenue, average order value, and other downstream business outcomes are not available in the dataset.
-- The formal third-party dataset license remains unverified.
-
-These limitations are considered when interpreting the findings and making recommendations.
-
-## Detailed Documentation
-
-- [Dataset Documentation, Provenance & Quality Audit](data/README.md)
-- [Final Experiment Report](reports/final_experiment_report.md)
-- [Exploratory Data Analysis Notebook](notebooks/01_exploratory_data_analysis.ipynb)
-- [Experiment Analysis Notebook](notebooks/02_experiment_analysis.ipynb)
-
-## License
-
-The repository's `LICENSE` file describes the intended license for the project code. It does not grant ownership of or additional rights to the third-party dataset. Refer to [`data/README.md`](data/README.md) for source and licensing caveats.
+The dataset is distributed as open educational courseware for learning and portfolio demonstration. However, the upstream repository does not bundle an explicit formal Creative Commons (e.g., CC0 / CC-BY) license deed. Formal commercial rights and public domain status cannot be independently verified offline. Users evaluating this repository should note that third-party data copyright remains with Udacity and its original authors.
 
 ---
 
-**Author:** Manish Kumar Mahato
+## 2. Raw Schema & Column Definitions
 
-**GitHub:** [manishkrmahato/ab-testing-product-analytics](https://github.com/manishkrmahato/ab-testing-product-analytics)
+### `ab_data.csv`
+
+| **Column Name** | **Data Type**    | **Description**                                     | **Values / Range**                                         |
+| --------------- | ---------------- | --------------------------------------------------- | ---------------------------------------------------------- |
+| `user_id`       | `int64`          | Unique visitor identifier                           | Range: [630000, 945999]                                    |
+| `timestamp`     | `datetime64[ns]` | Timestamp when the page view event was logged (UTC) | `2017-01-02 13:42:05` to `2017-01-24 13:41:54` (22.0 days) |
+| `group`         | `category`       | Experimental condition assigned to visitor          | `'control'`, `'treatment'`                                 |
+| `landing_page`  | `category`       | Version of webpage rendered to browser              | `'old_page'`, `'new_page'`                                 |
+| `converted`     | `int64`          | Binary conversion indicator                         | `0` = No conversion, `1` = Converted                       |
+
+### `countries.csv`
+
+| **Column Name** | **Data Type** | **Description**                              | **Values / Distribution**                        |
+| --------------- | ------------- | -------------------------------------------- | ------------------------------------------------ |
+| `user_id`       | `int64`       | Foreign key to `ab_data.csv` unique visitors | Matches 290,584 unique visitors                  |
+| `country`       | `category`    | User geolocation code                        | `'US'` (70.07%), `'UK'` (24.94%), `'CA'` (4.99%) |
+
+---
+
+## 3. Deep Data Quality Audit: Visitor-Level Structure & Anomalies
+
+An exhaustive audit of raw user sessions reveals critical structural complexities:
+
+### 3.1 Visitor Frequency Distribution
+
+- **Total Raw Records**: 294,478
+- **Total Unique Visitors**: 290,584
+- **Single-Session Visitors**: 286,690 visitors appear exactly once (98.66%).
+- **Multi-Session Visitors**: 3,894 visitors appear exactly twice (1.34%). No visitor appears 3 or more times.
+
+### 3.2 Multi-Session Anomaly Breakdown (3,894 Visitors)
+
+Among the 3,894 visitors with repeat sessions:
+
+1. **Clean Repeat Visitor (1 visitor)**:
+   - `user_id = 773192` visited twice (`2017-01-09` and `2017-01-14`), consistently in `treatment` and receiving `new_page` (`converted = 0` on both).
+2. **Conflicting Group Assignments (1,895 visitors)**:
+   - These visitors have one session logged as `control` and one session logged as `treatment`. In both sessions, the rendered `landing_page` was identical (e.g., `old_page` on both visits or `new_page` on both visits).
+   - *Implication*: Their assigned experimental group was unstable across sessions, indicating cookie resets, cross-device switching, or bucketing re-randomization.
+3. **Conflicting Landing Pages Delivered (1,998 visitors)**:
+   - These visitors had a stable `group` assignment across both sessions, but were served conflicting landing pages (`old_page` on one visit and `new_page` on the other).
+   - *Implication*: These visitors experienced cross-variant exposure (treatment contamination).
+4. **Row-Level Routing Mismatches**:
+   - Across the entire raw dataset, there are **3,893 rows** where `group == 'control'` and `landing_page == 'new_page'` (1,928 rows) or `group == 'treatment'` and `landing_page == 'old_page'` (1,965 rows).
+   - Notice that `1,895+1,998=3,893`. Every single multi-session visitor (except `773192`) accounts for exactly one matched row and one mismatched row!
+
+---
+
+## 4. Visitor-Level Analysis Rules & Methodological Trade-offs
+
+We explicitly define and evaluate four analytical specifications rather than silently discarding records:
+
+| **Specification**                   | **Defining Rule**                                                                   | **Sample Size (`N`)** | **Methodological Trade-off**                                                                                     |
+| ----------------------------------- | ----------------------------------------------------------------------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| **1. Strictly Unambiguous Cohort**  | Excludes all 3,893 visitors with routing errors or conflicting groups               | **286,691**           | Eliminates contamination; complete-case analysis, but assumes drop-outs are Missing Completely at Random (MCAR). |
+| **2. Benchmark Matched Filter**     | Drops the 3,893 mismatched rows, keeping 1 matched row per user                     | **290,584**           | Standard Udacity curriculum convention; retains all visitors but ignores that 1,998 users saw both pages.        |
+| **3. First-Touch Assignment Proxy** | Assigns user to earliest recorded `group`; conversion = `max(converted)`            | **290,584**           | Sensitivity analysis only; not verified ITT because authoritative assignment logs are unavailable.               |
+| **4. As-Treated (First Page)**      | Assigns user to the first page version actually seen; conversion = `max(converted)` | **290,584**           | Measures effect of page actually rendered; loses pure random assignment properties.                              |
+
+### Causal Inference Caveat
+
+We do **not** claim that filtering mismatched rows "prevents contamination" or that the resulting estimate is "automatically unbiased." If routing errors or multi-session returns were influenced by page performance or user engagement, complete-case filtering can induce selection or attrition bias. Demonstrating robustness across all four specifications is essential for statistical defensibility.
+
+---
+
+## 5. Automated Data Ingestion
+
+curl.exe -L -o data/raw/ab_data.csv [https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/ab_data.csv](https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/ab_data.csv) curl.exe -L -o data/raw/countries.csv [https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/countries.csv](https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/countries.csv)
+
+
+
+
+
+anything needed to change and is this the way user will reead it ?
