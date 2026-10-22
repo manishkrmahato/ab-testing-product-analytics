@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+ENV/
+.env
+
+# Build/test
+build/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Notebooks / IDE
+.ipynb_checkpoints/
+.vscode/
+.idea/
+
+# Source data are third-party; obtain from documented upstream source and verify terms before committing
+data/raw/*.csv
+
+# Generated local artifacts (recreated by pipeline)
+data/processed/*.csv
+data/*.db
+data/*.sqlite3
+
+# Logs
+*.log
