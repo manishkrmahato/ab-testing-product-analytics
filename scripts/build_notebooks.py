@@ -27,7 +27,7 @@ def create_eda_notebook(output_path: str = "notebooks/01_exploratory_data_analys
     cells.append(nbf.v4.new_markdown_cell("""# 01. Exploratory Data Analysis: E-Commerce A/B Test Results
 
 **Project**: A/B Testing & Product Experimentation Analytics  
-**Role**: Senior Experimentation Analyst / Data Scientist  
+**Project focus**: Experiment design, data quality, and conversion analysis  
 **Dataset**: E-commerce Website Landing Page Experiment (`ab_data.csv` and `countries.csv`)  
 **Objective**: Audit data quality, identify instrumentation anomalies and tracking mismatches, establish clean cohorts, and explore baseline user conversion behavior across time and geographic segments.
 """))
