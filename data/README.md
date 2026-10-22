@@ -1,98 +1,124 @@
+# Dataset Documentation, Provenance & Quality Audit
+
+## Quick Summary
+
+This project analyzes an e-commerce landing-page A/B test dataset originally used in Udacity's Data Analyst Nanodegree curriculum.
+
+- **Raw records:** 294,478
+- **Unique visitors:** 290,584
+- **Data-quality concerns:** conflicting group assignments and landing-page mismatches among repeat visitors
+- **Analysis approach:** compare alternative visitor-level data-handling specifications and disclose their limitations
+- **Licensing:** formal third-party dataset redistribution rights have not been verified
+
 ## 1. Overview & Provenance
 
-This project utilizes experimentation data from an e-commerce website landing page A/B test. The dataset was originally released by **Udacity** as part of the curriculum project *Analyze A/B Test Results* in the Data Analyst Nanodegree Program. It is widely mirrored on Kaggle and student repositories for experimentation pedagogy.
+The dataset was originally released as part of the Udacity curriculum project *Analyze A/B Test Results*. The files are mirrored in a public GitHub repository.
 
-- **Primary Dataset (`ab_data.csv`)**:
-  - Upstream Source URL: `https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/ab_data.csv`
-  - Canonical Reference: Udacity Data Analyst Nanodegree (`Analyze_ab_test_results_notebook.ipynb`)
-  - Verified File Size: 15,901,933 bytes (\~15.16 MB)
-  - Verified SHA256: `d56e2accec25e99ac21cb3d76c5df516dd19cc7a77c14c9014f94e1ea1301beb`
-  - Total Raw Records: 294,478 observations across 290,584 unique visitor IDs
-- **Secondary Segment Dataset (`countries.csv`)**:
-  - Upstream Source URL: `https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/countries.csv`
-  - Verified File Size: 2,905,856 bytes (\~2.77 MB)
-  - Verified SHA256: `c011d0503d305c295327cd9dff9c37bb62a5f9ef4b356bcdaf7deca20d55e45b`
-  - Total Raw Records: 290,584 observations mapping `user_id` to `country` (`US`, `UK`, `CA`)
+### Primary dataset: `ab_data.csv`
 
-### Licensing & Usage Rights Notice
+- Source: [ab_data.csv](https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/ab_data.csv)
+- Reported file size: 15,901,933 bytes
+- Reported SHA-256: `d56e2accec25e99ac21cb3d76c5df516dd19cc7a77c14c9014f94e1ea1301beb`
+- Raw records: 294,478
+- Unique visitor IDs: 290,584
 
-The dataset is distributed as open educational courseware for learning and portfolio demonstration. However, the upstream repository does not bundle an explicit formal Creative Commons (e.g., CC0 / CC-BY) license deed. Formal commercial rights and public domain status cannot be independently verified offline. Users evaluating this repository should note that third-party data copyright remains with Udacity and its original authors.
+### Secondary dataset: `countries.csv`
 
----
+- Source: [countries.csv](https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/countries.csv)
+- Reported file size: 2,905,856 bytes
+- Reported SHA-256: `c011d0503d305c295327cd9dff9c37bb62a5f9ef4b356bcdaf7deca20d55e45b`
+- Records: 290,584
+- Fields: `user_id`, `country`
 
-## 2. Raw Schema & Column Definitions
+### Licensing and usage rights
+
+The source is publicly downloadable, but a formal license granting unrestricted redistribution or public-domain status has not been verified. Download availability does not establish permission to redistribute the dataset. Review the upstream source's terms before republishing the data.
+
+## 2. Raw Schema
 
 ### `ab_data.csv`
 
-| **Column Name** | **Data Type**    | **Description**                                     | **Values / Range**                                         |
-| --------------- | ---------------- | --------------------------------------------------- | ---------------------------------------------------------- |
-| `user_id`       | `int64`          | Unique visitor identifier                           | Range: [630000, 945999]                                    |
-| `timestamp`     | `datetime64[ns]` | Timestamp when the page view event was logged (UTC) | `2017-01-02 13:42:05` to `2017-01-24 13:41:54` (22.0 days) |
-| `group`         | `category`       | Experimental condition assigned to visitor          | `'control'`, `'treatment'`                                 |
-| `landing_page`  | `category`       | Version of webpage rendered to browser              | `'old_page'`, `'new_page'`                                 |
-| `converted`     | `int64`          | Binary conversion indicator                         | `0` = No conversion, `1` = Converted                       |
+| Column | Description |
+|---|---|
+| `user_id` | Visitor identifier |
+| `timestamp` | Recorded page-view timestamp |
+| `group` | Recorded experimental group: `control` or `treatment` |
+| `landing_page` | Recorded page: `old_page` or `new_page` |
+| `converted` | Binary conversion indicator: `0` or `1` |
 
 ### `countries.csv`
 
-| **Column Name** | **Data Type** | **Description**                              | **Values / Distribution**                        |
-| --------------- | ------------- | -------------------------------------------- | ------------------------------------------------ |
-| `user_id`       | `int64`       | Foreign key to `ab_data.csv` unique visitors | Matches 290,584 unique visitors                  |
-| `country`       | `category`    | User geolocation code                        | `'US'` (70.07%), `'UK'` (24.94%), `'CA'` (4.99%) |
+| Column | Description |
+|---|---|
+| `user_id` | Visitor identifier used to join datasets |
+| `country` | Country code: `US`, `UK`, or `CA` |
+
+## 3. Data-Quality Audit
+
+The source data contains 294,478 rows and 290,584 unique visitors. There are 3,894 visitors with repeated records.
+
+The original audit identified:
+- 1 visitor with consistent repeated records.
+- 1,895 visitors with conflicting recorded group assignments.
+- 1,998 visitors with a stable recorded group but conflicting landing-page exposure.
+- 3,893 rows where the recorded group and landing page do not match the expected mapping.
+
+These categories describe recorded data patterns. They do not, by themselves, establish why the inconsistencies occurred or prove the original random assignment.
+
+<details>
+<summary>View detailed anomaly interpretation</summary>
+
+### Conflicting group assignments
+
+Some repeat visitors have records in both the `control` and `treatment` groups. Possible explanations include unstable bucketing or cross-device behavior, but the dataset alone does not establish the cause.
+
+### Conflicting landing-page exposure
+
+Some repeat visitors have records for both `old_page` and `new_page`. This creates uncertainty about which version they were exposed to and complicates causal interpretation.
+
+### Row-level routing mismatches
+
+A recorded group and page mismatch should not automatically be treated as proof of a particular assignment error. The original assignment log is unavailable, so the authoritative assignment cannot be independently verified.
+
+</details>
+
+## 4. Analysis Specifications and Trade-offs
+
+The project compares four ways of handling the data. Their exact implementation and output sample sizes should be checked against the analysis code and final report.
+
+| Specification | Approach | Important limitation |
+|---|---|---|
+| Strictly unambiguous cohort | Excludes visitors identified as ambiguous under the cleaning rules | Exclusion can introduce selection bias |
+| Benchmark matched filter | Removes rows whose recorded group and page do not match | Repeat visitors may have seen both versions |
+| First-touch assignment proxy | Uses the earliest recorded group and aggregates conversion at visitor level | Not verified intention-to-treat because authoritative assignment logs are unavailable |
+| As-treated, first page | Uses the first recorded page exposure and aggregates conversion at visitor level | Does not preserve the original randomized comparison automatically |
+
+These specifications are sensitivity analyses, not proof that any one estimate is unbiased. Results should be interpreted in light of the assumptions behind each rule.
+
+## 5. Downloading the Data
+
+From the repository root, run the following commands in PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force data/raw
+
+curl.exe -fL -o data/raw/ab_data.csv "https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/ab_data.csv"
+
+curl.exe -fL -o data/raw/countries.csv "https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/countries.csv"
+```
+
+### Verify the files
+
+The hashes listed above are reference values. After downloading, calculate the SHA-256 hashes locally and compare them with the documented values before using the files.
+
+The availability of these URLs does not establish permission to redistribute the dataset.
+
+## 6. Interpretation Caveat
+
+The dataset does not provide a verified authoritative assignment log. Conflicting assignments, page mismatches, and exclusion rules may affect the estimated treatment effect. Filtering ambiguous records does not automatically eliminate bias.
+
+For the experiment's statistical results and business interpretation, see the [final experiment report](../reports/final_experiment_report.md).
 
 ---
 
-## 3. Deep Data Quality Audit: Visitor-Level Structure & Anomalies
-
-An exhaustive audit of raw user sessions reveals critical structural complexities:
-
-### 3.1 Visitor Frequency Distribution
-
-- **Total Raw Records**: 294,478
-- **Total Unique Visitors**: 290,584
-- **Single-Session Visitors**: 286,690 visitors appear exactly once (98.66%).
-- **Multi-Session Visitors**: 3,894 visitors appear exactly twice (1.34%). No visitor appears 3 or more times.
-
-### 3.2 Multi-Session Anomaly Breakdown (3,894 Visitors)
-
-Among the 3,894 visitors with repeat sessions:
-
-1. **Clean Repeat Visitor (1 visitor)**:
-   - `user_id = 773192` visited twice (`2017-01-09` and `2017-01-14`), consistently in `treatment` and receiving `new_page` (`converted = 0` on both).
-2. **Conflicting Group Assignments (1,895 visitors)**:
-   - These visitors have one session logged as `control` and one session logged as `treatment`. In both sessions, the rendered `landing_page` was identical (e.g., `old_page` on both visits or `new_page` on both visits).
-   - *Implication*: Their assigned experimental group was unstable across sessions, indicating cookie resets, cross-device switching, or bucketing re-randomization.
-3. **Conflicting Landing Pages Delivered (1,998 visitors)**:
-   - These visitors had a stable `group` assignment across both sessions, but were served conflicting landing pages (`old_page` on one visit and `new_page` on the other).
-   - *Implication*: These visitors experienced cross-variant exposure (treatment contamination).
-4. **Row-Level Routing Mismatches**:
-   - Across the entire raw dataset, there are **3,893 rows** where `group == 'control'` and `landing_page == 'new_page'` (1,928 rows) or `group == 'treatment'` and `landing_page == 'old_page'` (1,965 rows).
-   - Notice that `1,895+1,998=3,893`. Every single multi-session visitor (except `773192`) accounts for exactly one matched row and one mismatched row!
-
----
-
-## 4. Visitor-Level Analysis Rules & Methodological Trade-offs
-
-We explicitly define and evaluate four analytical specifications rather than silently discarding records:
-
-| **Specification**                   | **Defining Rule**                                                                   | **Sample Size (`N`)** | **Methodological Trade-off**                                                                                     |
-| ----------------------------------- | ----------------------------------------------------------------------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| **1. Strictly Unambiguous Cohort**  | Excludes all 3,893 visitors with routing errors or conflicting groups               | **286,691**           | Eliminates contamination; complete-case analysis, but assumes drop-outs are Missing Completely at Random (MCAR). |
-| **2. Benchmark Matched Filter**     | Drops the 3,893 mismatched rows, keeping 1 matched row per user                     | **290,584**           | Standard Udacity curriculum convention; retains all visitors but ignores that 1,998 users saw both pages.        |
-| **3. First-Touch Assignment Proxy** | Assigns user to earliest recorded `group`; conversion = `max(converted)`            | **290,584**           | Sensitivity analysis only; not verified ITT because authoritative assignment logs are unavailable.               |
-| **4. As-Treated (First Page)**      | Assigns user to the first page version actually seen; conversion = `max(converted)` | **290,584**           | Measures effect of page actually rendered; loses pure random assignment properties.                              |
-
-### Causal Inference Caveat
-
-We do **not** claim that filtering mismatched rows "prevents contamination" or that the resulting estimate is "automatically unbiased." If routing errors or multi-session returns were influenced by page performance or user engagement, complete-case filtering can induce selection or attrition bias. Demonstrating robustness across all four specifications is essential for statistical defensibility.
-
----
-
-## 5. Automated Data Ingestion
-
-curl.exe -L -o data/raw/ab_data.csv [https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/ab_data.csv](https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/ab_data.csv) curl.exe -L -o data/raw/countries.csv [https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/countries.csv](https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/countries.csv)
-
-
-
-
-
-anything needed to change and is this the way user will reead it ?
+**Purpose:** educational portfolio analysis of data quality, experimentation methodology, and statistical uncertainty.
