@@ -83,9 +83,22 @@ We do **not** claim that filtering mismatched rows "prevents contamination" or t
 
 ---
 
-## 5. Automated Data Ingestion
+## 5. Reproducing the Dataset
+
+The raw CSV files are not included in this repository. Download them from the documented upstream source before running the analysis.
+
+Open PowerShell from the repository root and run:
 
 ```powershell
-curl.exe -L -o data/raw/ab_data.csv https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/ab_data.csv
-curl.exe -L -o data/raw/countries.csv https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/countries.csv
+New-Item -ItemType Directory -Force data/raw
+
+curl.exe -fL -o data/raw/ab_data.csv "https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/ab_data.csv"
+
+curl.exe -fL -o data/raw/countries.csv "https://raw.githubusercontent.com/beery4010/Analyze-AB-Test-Results/master/countries.csv"
 ```
+
+### Verify the downloaded files
+
+Compare the downloaded files against the SHA-256 hashes documented in Section 1. If a hash does not match, investigate the source or file version before running the analysis.
+
+**Important:** The availability of a download does not establish permission to redistribute the dataset. Review the upstream source's terms before republishing the data.
